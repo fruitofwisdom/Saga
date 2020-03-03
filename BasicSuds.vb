@@ -21,11 +21,15 @@ Namespace BasicSuds
                 ' Load room elements into our Rooms dictionary.
                 Dim roomsXml As IEnumerable(Of XElement) = From roomXml In gameXml...<room>
                 For Each roomXml In roomsXml
-                    Dim newRoom As New Room With {
-                        .Name = If(roomXml.@name, "Utterly Confused Room"),
-                        .Description = If(roomXml.Element("description") Is Nothing, "This room is deeply confused.", roomXml.Element("description").Value)
-                        }
-                    Rooms.Add(newRoom.Name, newRoom)
+                    If IsNothing(roomXml.@name) Or IsNothing(roomXml.Element("description")) Then
+                        Console.WriteLine("Found an invalid room, ignoring!")
+                    Else
+                        Dim newRoom As New Room With {
+                            .Name = roomXml.@name,
+                            .Description = roomXml.Element("description").Value
+                            }
+                        Rooms.Add(newRoom.Name, newRoom)
+                    End If
                 Next
                 CurrentRoom = gameXml.@startingRoom
 
