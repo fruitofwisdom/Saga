@@ -1,7 +1,8 @@
 Friend Module Program
     Public Sub Main()
         Console.WriteLine("Welcome to the BasicSuds retro engine for Single User Dungeons!")
-        Dim Engine As New BasicSuds.BasicSudsEngine
-        Engine.Run("DemoGame.xml")
+        Dim engine As New BasicSuds.Engine
+        engine.LoadGame("DemoGame.xml")
+        engine.Run()
     End Sub
 End Module

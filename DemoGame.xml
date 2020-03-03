@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<basicSudsGame name="Demo Game" startingRoom="Limbo">
+  <room name="Limbo">
+    <description>You are resting in limbo. Space extends around you endlessly...</description>
+  </room>
+  <room name="Developer Room">
+    <description>A small, messy room, with discarded pieces of broken code scattered about.</description>
+  </room>
+</basicSudsGame>

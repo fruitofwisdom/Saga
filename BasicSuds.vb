@@ -1,20 +1,55 @@
 ﻿Option Strict On
 
 Namespace BasicSuds
-    Public Class BasicSudsEngine
-        Private Running As Boolean
+    Public Class Engine
+        Private Structure Room
+            Public Property Name As String
+            Public Property Description As String
+        End Structure
 
-        Public Sub New()
-            Running = False
+        Private GameLoaded As Boolean = False
+        Private Running As Boolean = False
+
+        Private ReadOnly Rooms As New Dictionary(Of String, Room)
+        Private CurrentRoom As String
+
+        Public Sub LoadGame(gameFilename As String)
+            Console.WriteLine($"Loading Single User Dungeon ""{gameFilename}""...")
+            Try
+                Dim gameXml As XElement = XElement.Load(gameFilename)
+
+                ' Load room elements into our Rooms dictionary.
+                Dim roomsXml As IEnumerable(Of XElement) = From roomXml In gameXml...<room>
+                For Each roomXml In roomsXml
+                    Dim newRoom As New Room With {
+                        .Name = If(roomXml.@name, "Utterly Confused Room"),
+                        .Description = If(roomXml.Element("description") Is Nothing, "This room is deeply confused.", roomXml.Element("description").Value)
+                        }
+                    Rooms.Add(newRoom.Name, newRoom)
+                Next
+                CurrentRoom = gameXml.@startingRoom
+
+                GameLoaded = True
+                Console.WriteLine($"Ready to play {gameXml.@name}!")
+                Console.WriteLine()
+            Catch exception As System.IO.FileNotFoundException
+                Console.WriteLine("Game not found!")
+            Catch exception As System.Xml.XmlException
+                Console.WriteLine("Malformed XML file!")
+            End Try
         End Sub
 
-        Public Sub Run(Game As String)
-            ' TODO: Actually load game content.
-            Console.WriteLine("Running Single User Dungeon " & Game & "...")
+        Public Sub Run()
+            If Not GameLoaded Then
+                Console.WriteLine("No game has been loaded!")
+                Return
+            End If
             Running = True
 
             ' Main game loop.
             Do While Running
+                Console.WriteLine(Rooms.Item(CurrentRoom).Name)
+                Console.WriteLine(Rooms.Item(CurrentRoom).Description)
                 Console.Write("> ")
                 Dim Input = Console.ReadLine()
 
