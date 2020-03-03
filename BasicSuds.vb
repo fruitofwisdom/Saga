@@ -31,7 +31,6 @@ Namespace BasicSuds
 
                 GameLoaded = True
                 Console.WriteLine($"Ready to play {gameXml.@name}!")
-                Console.WriteLine()
             Catch exception As System.IO.FileNotFoundException
                 Console.WriteLine("Game not found!")
             Catch exception As System.Xml.XmlException
@@ -48,20 +47,41 @@ Namespace BasicSuds
 
             ' Main game loop.
             Do While Running
+                Console.WriteLine()
                 Console.WriteLine(Rooms.Item(CurrentRoom).Name)
                 Console.WriteLine(Rooms.Item(CurrentRoom).Description)
                 Console.Write("> ")
-                Dim Input = Console.ReadLine()
+                Dim input = Console.ReadLine()
+                HandleInput(input)
+            Loop
+        End Sub
 
-                ' Handle player input.
-                If Input Is Nothing Or Input.ToLower() = "exit" Or Input.ToLower() = "quit" Then
+        Private Sub HandleInput(input As String)
+            Dim inputUnderstood As Boolean = False
+
+            ' If we receive Ctrl+C, for example, exit.
+            If input Is Nothing Then
+                input = "exit"
+            End If
+
+            input = input.Trim().ToLower()
+
+            Select Case input
+                Case "exit", "quit"
                     Running = False
-                ElseIf Input.ToLower() = "help" Or Input.ToLower() = "?" Then
-                    Console.WriteLine("BasicSucs Basic Help")
+                    inputUnderstood = True
+                Case "help", "?"
+                    Console.WriteLine("BasicSuds Basic Help")
                     Console.WriteLine("Type ""exit"" or ""quit"" to finish playing.")
                     Console.WriteLine("     ""help"" or ""?"" to see these instructions.")
-                End If
-            Loop
+                    inputUnderstood = True
+                Case ""
+                    inputUnderstood = True
+            End Select
+
+            If Not inputUnderstood Then
+                Console.WriteLine("Huh?")
+            End If
         End Sub
     End Class
 End Namespace
