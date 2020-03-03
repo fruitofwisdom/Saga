@@ -1,9 +1,7 @@
-Imports System
-
-Module Program
-    Sub Main(args As String())
-        Console.WriteLine("Hello World!")
-        Console.WriteLine("Press any key to continue...")
-        Console.ReadKey(True)
+Friend Module Program
+    Public Sub Main()
+        Console.WriteLine("Welcome to the BasicSuds retro engine for Single User Dungeons!")
+        Dim Engine As New BasicSuds.BasicSudsEngine
+        Engine.Run("DemoGame.xml")
     End Sub
 End Module
