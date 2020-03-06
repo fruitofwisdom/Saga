@@ -2,15 +2,10 @@
 
 Namespace BasicSuds
     Public Class Engine
-        Private Structure Room
-            Public Property Name As String
-            Public Property Description As String
-        End Structure
-
         Private GameLoaded As Boolean = False
         Private Running As Boolean = False
 
-        Private ReadOnly Rooms As New Dictionary(Of String, Room)
+        Private Rooms As New Dictionary(Of String, Room)
         Private CurrentRoom As String
 
         Public Sub LoadGame(gameFilename As String)
@@ -19,22 +14,11 @@ Namespace BasicSuds
                 Dim gameXml As XElement = XElement.Load(gameFilename)
 
                 ' Load room elements into our Rooms dictionary.
-                Dim roomsXml As IEnumerable(Of XElement) = From roomXml In gameXml...<room>
-                For Each roomXml In roomsXml
-                    If IsNothing(roomXml.@name) Or IsNothing(roomXml.Element("description")) Then
-                        Console.WriteLine("Found an invalid room, ignoring!")
-                    Else
-                        Dim newRoom As New Room With {
-                            .Name = roomXml.@name,
-                            .Description = roomXml.Element("description").Value
-                            }
-                        Rooms.Add(newRoom.Name, newRoom)
-                    End If
-                Next
+                Rooms = Room.LoadFromXml(gameXml)
                 CurrentRoom = gameXml.@startingRoom
 
                 GameLoaded = True
-                Console.WriteLine($"Ready to play {gameXml.@name}!")
+                Console.WriteLine($"Ready to play ""{gameXml.@name}""!")
             Catch exception As System.IO.FileNotFoundException
                 Console.WriteLine("Game not found!")
             Catch exception As System.Xml.XmlException
@@ -60,6 +44,27 @@ Namespace BasicSuds
             Loop
         End Sub
 
+        ' Look up some of the most common commands' abbreviated shorthand.
+        Private Function LookupShorthand(input As String) As String
+            Dim shorthand = New Dictionary(Of String, String) From {
+                {"n", "north"},
+                {"s", "south"},
+                {"e", "east"},
+                {"w", "west"},
+                {"ne", "northeast"},
+                {"nw", "northwest"},
+                {"se", "southeast"},
+                {"sw", "southwest"},
+                {"u", "up"},
+                {"d", "down"}
+                }
+            If shorthand.ContainsKey(input) Then
+                Return shorthand.Item(input)
+            Else
+                Return input
+            End If
+        End Function
+
         Private Sub HandleInput(input As String)
             Dim inputUnderstood As Boolean = False
 
@@ -69,6 +74,8 @@ Namespace BasicSuds
             End If
 
             input = input.Trim().ToLower()
+
+            input = LookupShorthand(input)
 
             Select Case input
                 Case "exit", "quit"
@@ -81,8 +88,22 @@ Namespace BasicSuds
                     inputUnderstood = True
                 Case ""
                     inputUnderstood = True
+                Case Else
+                    ' Room exits can be non-standard commands. Handle checking those here.
+                    If Rooms.Item(CurrentRoom).Exits.ContainsKey(input) Then
+                        Dim newRoom As String = Rooms.Item(CurrentRoom).Exits.Item(input)
+                        If Rooms.ContainsKey(newRoom) Then
+                            CurrentRoom = newRoom
+                        Else
+                            Console.WriteLine($"Room ""{newRoom}"" wasn't found!")
+                        End If
+                    Else
+                        Console.WriteLine($"You can't ""{input}"" here.")
+                    End If
+                    inputUnderstood = True
             End Select
 
+            ' TODO: This is no longer necessary, I think...
             If Not inputUnderstood Then
                 Console.WriteLine("Huh?")
             End If
