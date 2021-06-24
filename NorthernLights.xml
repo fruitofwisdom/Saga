@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<basicSudsGame name="Northern Lights" startingRoom="Your House">
+  <room name="City Square">
+    <description>
+      You stand in the heart of the city, where its main thoroughfare intersects with its quaint shopping district. To the north you can see the harbor, a large cathedral rises on the hill to the south, and the shopping street crosses east to west.
+    </description>
+    <exits>
+      <north>Waterfront</north>
+      <east>Shopping District</east>
+      <south>Outside the Cathedral</south>
+      <west>Old Town</west>
+    </exits>
+  </room>
+  <room name="Waterfront">
+    <description>
+      Your gaze lingers over the mountains rising beyond the fog across the water of the bay. To your west is the harbor and to your east lies the residential district.
+    </description>
+    <exits>
+      <south>City Square</south>
+      <east>Residential District</east>
+      <west>Harbor</west>
+    </exits>
+  </room>
+  <room name="Shopping District">
+    <description>
+      A colorful street full of shops continues to the east and west. The smell of fresh-baked goods wafts from a door to the north and the clanging of metal from another to the south. East continues to the city outskirts.
+    </description>
+    <exits>
+      <north>The Fat Baker</north>
+      <east>Southern Outskirts</east>
+      <south>Edgar's Tools</south>
+      <west>City Square</west>
+    </exits>
+  </room>
+  <room name="Outside the Cathedral">
+    <description>
+      Standing below the majestic spires of the cathedral, you can't help but feel intimidated by its presence over the city. The doors to the cathedral are open and the road continues north to the city square.
+    </description>
+    <exits>
+      <north>City Square</north>
+      <south>Inside the Cathedral</south>
+      <in>Inside the Cathedral</in>
+    </exits>
+  </room>
+  <room name="Old Town">
+    <description>
+      Low, squat buildings made of wood and stucco line this square. Their peaked roofs help keep snow off in the winter. The city square is to the east and your modest home is to the north.
+    </description>
+    <exits>
+      <north>Your House</north>
+      <east>City Square</east>
+      <in>Your House</in>
+    </exits>
+  </room>
+  <room name="Residential District">
+    <description>
+      More homes line the street overlooking the harbor to the north. These houses are narrow, two- or three-stories, and their windows are barred against the cold wind. The waterfront lies to the west and the outskirts to the east.
+    </description>
+    <exits>
+      <east>Northern Outskirts</east>
+      <west>Waterfront</west>
+    </exits>
+  </room>
+  <room name="Harbor">
+    <description>
+      The busy waterfront sprawls north of you out into the bay. Fishermen are busy bringing in their catch for the day, the smell of sea strong here. The waterfront is back to the east.
+    </description>
+    <exits>
+      <east>Waterfront</east>
+    </exits>
+  </room>
+  <room name="The Fat Baker">
+    <description>
+      Contrary to the shop's name, the baker is in fact a pretty, young lady, tending to some bread fresh out of the oven. The shelves are lined with the most delicious goods imaginable. The door to the south leads out, but you are hesitant to go.
+    </description>
+    <exits>
+      <south>Shopping District</south>
+      <out>Shopping District</out>
+    </exits>
+  </room>
+  <room name="Southern Outskirts">
+    <description>
+      The city comes to an end here, with the cobblestone road continuing to the east into the hills in the distance. You can reach the bay to the north and the shopping district to the west.
+    </description>
+    <exits>
+      <north>Northern Outskirts</north>
+      <east>Road Out of Town</east>
+      <west>Shopping District</west>
+    </exits>
+  </room>
+  <room name="Edgar's Tools">
+    <description>
+      Edgar stands proudly behind the counter of his shop, swords, axes, spears, shields, armor, and other metal goods displayed around the store. What else could you need to defend yourselves in the wilds? The door leading out is to the north.
+    </description>
+    <exits>
+      <north>Shopping District</north>
+      <out>Shopping District</out>
+    </exits>
+  </room>
+  <room name="Inside the Cathedral">
+    <description>
+      The cold stone outside is contrasted with the warmth of the candles glowing within the dim light of the cathedral. The midday sun comes in through its stainglass windows as the organ is played in the corner. The doors are open to the north.
+    </description>
+    <exits>
+      <north>Outside the Cathedral</north>
+      <out>Outside the Cathedral</out>
+    </exits>
+  </room>
+  <room name="Your House">
+    <description>
+      Your humble home is just that, the place where you rest your head and keep your belongings between adventures. Well, supposed adventures. You haven't done much of that lately... time to be off then. To the south lies your journey.
+    </description>
+    <exits>
+      <south>Old Town</south>
+      <out>Old Town</out>
+    </exits>
+  </room>
+  <room name="Northern Outskirts">
+    <description>
+      The bay seems to get colder as you leave town and the way rockier to the east. You would be better off joining the cobblestone road to the south or going back to town to the west.
+    </description>
+    <exits>
+      <south>Southern Outskirts</south>
+      <west>Residential District</west>
+    </exits>
+  </room>
+  <room name="Limbo">
+    <description>You are resting in limbo. Space extends around you endlessly...</description>
+  </room>
+  <room name="Developer Room">
+    <description>A small, messy room, with discarded pieces of broken code scattered about.</description>
+  </room>
+</basicSudsGame>
