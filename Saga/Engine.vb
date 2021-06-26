@@ -1,18 +1,18 @@
 ﻿Option Strict On
 
-Namespace BasicSuds
+Namespace Saga
     Public Class Engine
         Private GameLoaded As Boolean = False
         Private Running As Boolean = False
         Private NeedLook As Boolean = False
-        Private Version As String = "alpha.210624"
+        Private Version As String = "alpha.210626"
 
         Private Rooms As New Dictionary(Of String, Room)
         Private CurrentRoom As String
 
         Public Sub LoadGame(gameFilename As String)
-            Console.WriteLine($"Welcome to the BasicSuds retro engine for Single User Dungeons, version {Version}!")
-            Console.WriteLine($"Loading Single User Dungeon ""{gameFilename}""...")
+            Console.WriteLine($"Welcome to the Saga retro engine for Single User Dungeons, version {Version}!")
+            Console.WriteLine($"Loading saga ""{gameFilename}""...")
             Try
                 Dim gameXml As XElement = XElement.Load(gameFilename)
 
@@ -21,7 +21,7 @@ Namespace BasicSuds
                 CurrentRoom = gameXml.@startingRoom
 
                 GameLoaded = True
-                Console.Title = $"BasicSuds {Version} - {gameXml.@name}"
+                Console.Title = $"Saga {Version} - {gameXml.@name}"
                 Console.WriteLine($"{Rooms.Count} rooms loaded. Ready to play ""{gameXml.@name}""!")
             Catch exception As System.IO.FileNotFoundException
                 Console.ForegroundColor = ConsoleColor.Red

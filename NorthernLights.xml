@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<basicSudsGame name="Northern Lights" startingRoom="Your House">
+<saga name="Northern Lights" startingRoom="Your House">
   <room name="City Square">
     <description>
       You stand in the heart of the city, where its main thoroughfare intersects with its quaint shopping district. To the north you can see the harbor, a large cathedral rises on the hill to the south, and the shopping street crosses east to west.
@@ -130,4 +130,4 @@
   <room name="Developer Room">
     <description>A small, messy room, with discarded pieces of broken code scattered about.</description>
   </room>
-</basicSudsGame>
+</saga>

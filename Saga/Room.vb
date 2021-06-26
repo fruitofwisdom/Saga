@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Namespace BasicSuds
+Namespace Saga
     Friend Class Room
         Public Property Name As String
         Public Property Description As String
