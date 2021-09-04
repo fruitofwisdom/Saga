@@ -5,33 +5,23 @@ Namespace Saga
         Private GameLoaded As Boolean = False
         Private Running As Boolean = False
         Private NeedLook As Boolean = False
-        Private Version As String = "alpha.210626"
 
-        Private Rooms As New Dictionary(Of String, Room)
+        Private Game As New Game
         Private CurrentRoom As String
 
         Public Sub LoadGame(gameFilename As String)
-            Console.WriteLine($"Welcome to the Saga retro engine for Single User Dungeons, version {Version}!")
+            Dim majorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major.ToString()
+            Dim minorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor.ToString()
+            Console.WriteLine($"Welcome to the Saga retro engine for Single-User Dungeons, version {majorVersion}.{minorVersion}!")
             Console.WriteLine($"Loading saga ""{gameFilename}""...")
-            Try
-                Dim gameXml As XElement = XElement.Load(gameFilename)
 
-                ' Load room elements into our Rooms dictionary.
-                Rooms = Room.LoadFromXml(gameXml)
-                CurrentRoom = gameXml.@startingRoom
-
-                GameLoaded = True
-                Console.Title = $"Saga {Version} - {gameXml.@name}"
-                Console.WriteLine($"{Rooms.Count} rooms loaded. Ready to play ""{gameXml.@name}""!")
-            Catch exception As System.IO.FileNotFoundException
-                Console.ForegroundColor = ConsoleColor.Red
-                Console.WriteLine("Game not found!")
-                Console.ResetColor()
-            Catch exception As System.Xml.XmlException
-                Console.ForegroundColor = ConsoleColor.Red
-                Console.WriteLine("Malformed XML file!")
-                Console.ResetColor()
-            End Try
+            ' Populate the Game object from the provided JSON file.
+            GameLoaded = Game.LoadFromJson(gameFilename)
+            If GameLoaded Then
+                CurrentRoom = Game.StartingRoom
+                Console.Title = $"Saga v{majorVersion}.{minorVersion} - {Game.Name}"
+                Console.WriteLine($"{Game.GetRoomCount()} rooms loaded. Ready to play ""{Game.Name}""!")
+            End If
         End Sub
 
         Public Sub Run()
@@ -49,8 +39,8 @@ Namespace Saga
             Do While Running
                 Console.WriteLine()
                 If NeedLook Then
-                    Console.WriteLine(Rooms.Item(CurrentRoom).Name)
-                    Rooms.Item(CurrentRoom).WriteDescription()
+                    Console.WriteLine(Game.GetRoom(CurrentRoom).Name)
+                    Game.GetRoom(CurrentRoom).WriteDescription()
                     NeedLook = False
                 End If
                 Console.Write("> ")
@@ -124,9 +114,9 @@ Namespace Saga
         End Function
 
         Private Function TryExit(input As String) As Boolean
-            If Rooms.Item(CurrentRoom).Exits.ContainsKey(input) Then
-                Dim newRoom As String = Rooms.Item(CurrentRoom).Exits.Item(input)
-                If Rooms.ContainsKey(newRoom) Then
+            If Game.GetRoom(CurrentRoom).HasExit(input) Then
+                Dim newRoom As String = Game.GetRoom(CurrentRoom).GetExit(input).Room
+                If Game.GetRoom(newRoom) IsNot Nothing Then
                     CurrentRoom = newRoom
                     NeedLook = True
                 Else

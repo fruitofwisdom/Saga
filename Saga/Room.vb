@@ -1,46 +1,38 @@
 ﻿Option Strict On
 
 Namespace Saga
+    Friend Structure RoomExit
+        Public Property Direction As String
+        Public Property Room As String
+    End Structure
+
     Friend Class Room
         Public Property Name As String
         Public Property Description As String
-        Public Property Exits As Dictionary(Of String, String)
+        Public Property Exits As List(Of RoomExit)
 
-        ' Parse some XML into a dictionary of rooms by room name.
-        Public Shared Function LoadFromXml(gameXml As XElement) As Dictionary(Of String, Room)
-            Dim rooms As New Dictionary(Of String, Room)
-            Dim roomsXml As IEnumerable(Of XElement) = From roomXml In gameXml...<room>
+        Public Function HasExit(direction As String) As Boolean
+            Dim toReturn As Boolean = False
 
-            For Each roomXml In roomsXml
-                If roomXml.@name Is Nothing Or roomXml.Element("description") Is Nothing Then
-                    Console.ForegroundColor = ConsoleColor.Red
-                    Console.WriteLine("Found an invalid room, ignoring!")
-                    Console.ResetColor()
-                Else
-                    ' All child elements of <exit> are links to other rooms.
-                    Dim exits As New Dictionary(Of String, String)
-                    If roomXml.Element("exits") IsNot Nothing Then
-                        For Each roomExit In roomXml.Elements("exits").Elements()
-                            If roomExit.Value = "" Then
-                                Console.ForegroundColor = ConsoleColor.Red
-                                Console.WriteLine($"Found an invalid exit for room ""{roomXml.@name}"", ignoring!")
-                                Console.ResetColor()
-                            Else
-                                exits.Add(roomExit.Name.ToString().Trim(), roomExit.Value.Trim())
-                            End If
-                        Next
-                    End If
-
-                    Dim newRoom As New Room With {
-                        .Name = roomXml.@name.Trim(),
-                        .Description = roomXml.Element("description").Value.Trim(),
-                        .Exits = exits
-                        }
-                    rooms.Add(newRoom.Name, newRoom)
+            For Each roomExit In Exits
+                If roomExit.Direction = direction Then
+                    toReturn = True
                 End If
             Next
 
-            Return rooms
+            Return toReturn
+        End Function
+
+        Public Function GetExit(direction As String) As RoomExit
+            Dim toReturn As RoomExit = Nothing
+
+            For Each roomExit In Exits
+                If roomExit.Direction = direction Then
+                    toReturn = roomExit
+                End If
+            Next
+
+            Return toReturn
         End Function
 
         ' Write the description of a Room to the console with automatic line breaks.

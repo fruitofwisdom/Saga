@@ -1,0 +1,139 @@
+{
+	"name": "Northern Lights",
+	"startingRoom": "Your House",
+	"rooms":
+	[
+		{
+			"name": "City Square",
+			"description": "You stand in the heart of the city, where its main thoroughfare intersects with its quaint shopping district. To the north you can see the harbor, a large cathedral rises on the hill to the south, and the shopping street crosses east to west.",
+			"exits":
+			[
+				{ "direction": "north", "room": "Waterfront" },
+				{ "direction": "east", "room": "Shopping District" },
+				{ "direction": "south", "room": "Outside the Cathedral" },
+				{ "direction": "west", "room": "Old Town" }
+			]
+		},
+		{
+			"name": "Waterfront",
+			"description": "Your gaze lingers over the mountains rising beyond the fog across the water of the bay. To your west is the harbor and to your east lies the residential district.",
+			"exits":
+			[
+				{ "direction": "south", "room": "City Square" },
+				{ "direction": "east", "room": "Residential District" },
+				{ "direction": "west", "room": "Harbor" }
+			]
+		},
+		{
+			"name": "Shopping District",
+			"description": "A colorful street full of shops continues to the east and west. The smell of fresh-baked goods wafts from a door to the north and the clanging of metal from another to the south. East continues to the city outskirts.",
+			"exits":
+			[
+				{ "direction": "north", "room": "The Fat Baker" },
+				{ "direction": "east", "room": "Southern Outskirts" },
+				{ "direction": "south", "room": "Edgar's Tools" },
+				{ "direction": "west", "room": "City Square" }
+			]
+		},
+		{
+			"name": "Outside the Cathedral",
+			"description": "Standing below the majestic spires of the cathedral, you can't help but feel intimidated by its presence over the city. The doors to the cathedral are open and the road continues north to the city square.",
+			"exits":
+			[
+				{ "direction": "north", "room": "City Square" },
+				{ "direction": "south", "room": "Inside the Cathedral" },
+				{ "direction": "in", "room": "Inside the Cathedral" }
+			]
+		},
+		{
+			"name": "Old Town",
+			"description": "Low, squat buildings made of wood and stucco line this square. Their peaked roofs help keep snow off in the winter. The city square is to the east and your modest home is to the north.",
+			"exits":
+			[
+				{ "direction": "north", "room": "Your House" },
+				{ "direction": "east", "room": "City Square" },
+				{ "direction": "in", "room": "Your House" }
+			]
+		},
+		{
+			"name": "Residential District",
+			"description": "More homes line the street overlooking the harbor to the north. These houses are narrow, two- or three-stories, and their windows are barred against the cold wind. The waterfront lies to the west and the outskirts to the east.",
+			"exits":
+			[
+				{ "direction": "east", "room": "Northern Outskirts" },
+				{ "direction": "west", "room": "Waterfront" }
+			]
+		},
+		{
+			"name": "Harbor",
+			"description": "The busy waterfront sprawls north of you out into the bay. Fishermen are busy bringing in their catch for the day, the smell of sea strong here. The waterfront is back to the east.",
+			"exits":
+			[
+				{ "direction": "east", "room": "Waterfront" }
+			]
+		},
+		{
+			"name": "The Fat Baker",
+			"description": "Contrary to the shop's name, the baker is in fact a pretty, young lady, tending to some bread fresh out of the oven. The shelves are lined with the most delicious goods imaginable. The door to the south leads out, but you are hesitant to go.",
+			"exits":
+			[
+				{ "direction": "south", "room": "Shopping District" },
+				{ "direction": "out", "room": "Shopping District" }
+			]
+		},
+		{
+			"name": "Southern Outskirts",
+			"description": "The city comes to an end here, with the cobblestone road continuing to the east into the hills in the distance. You can reach the bay to the north and the shopping district to the west.",
+			"exits":
+			[
+				{ "direction": "north", "room": "Northern Outskirts" },
+				{ "direction": "east", "room": "Road Out of Town" },
+				{ "direction": "west", "room": "Shopping District" }
+			]
+		},
+		{
+			"name": "Edgar's Tools",
+			"description": "Edgar stands proudly behind the counter of his shop, swords, axes, spears, shields, armor, and other metal goods displayed around the store.What else could you need to defend yourselves in the wilds? The door leading out is to the north.",
+			"exits":
+			[
+				{ "direction": "north", "room": "Shopping District" },
+				{ "direction": "out", "room": "Shopping District" }
+			]
+		},
+		{
+			"name": "Inside the Cathedral",
+			"description": "The cold stone outside is contrasted with the warmth of the candles glowing within the dim light of the cathedral. The midday sun comes in through its stainglass windows as the organ is played in the corner. The doors are open to the north.",
+			"exits":
+			[
+				{ "direction": "north", "room": "Outside the Cathedral" },
+				{ "direction": "out", "room": "Outside the Cathedral" }
+			]
+		},
+		{
+			"name": "Your House",
+			"description": "Your humble home is just that, the place where you rest your head and keep your belongings between adventures. Well, supposed adventures. You haven't done much of that lately... time to be off then. To the south lies your journey.",
+			"exits":
+			[
+				{ "direction": "south", "room": "Old Town" },
+				{ "direction": "out", "room": "Old Town" }
+			]
+		},
+		{
+			"name": "Northern Outskirts",
+			"description": "The bay seems to get colder as you leave town and the way rockier to the east. You would be better off joining the cobblestone road to the south or going back to town to the west.",
+			"exits":
+			[
+				{ "direction": "south", "room": "Southern Outskirts" },
+				{ "direction": "west", "room": "Residential District" }
+			]
+		},
+		{
+			"name": "Limbo",
+			"description": "You are resting in limbo. Space extends around you endlessly..."
+		},
+		{
+			"name": "Developer Room",
+			"description": "A small, messy room, with discarded pieces of broken code scattered about."
+		}
+	]
+}
