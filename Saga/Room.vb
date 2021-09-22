@@ -14,11 +14,13 @@ Namespace Saga
         Public Function HasExit(direction As String) As Boolean
             Dim toReturn As Boolean = False
 
-            For Each roomExit In Exits
-                If roomExit.Direction = direction Then
-                    toReturn = True
-                End If
-            Next
+            If Exits IsNot Nothing Then
+                For Each roomExit In Exits
+                    If roomExit.Direction = direction Then
+                        toReturn = True
+                    End If
+                Next
+            End If
 
             Return toReturn
         End Function
@@ -26,11 +28,13 @@ Namespace Saga
         Public Function GetExit(direction As String) As RoomExit
             Dim toReturn As RoomExit = Nothing
 
-            For Each roomExit In Exits
-                If roomExit.Direction = direction Then
-                    toReturn = roomExit
-                End If
-            Next
+            If Exits IsNot Nothing Then
+                For Each roomExit In Exits
+                    If roomExit.Direction = direction Then
+                        toReturn = roomExit
+                    End If
+                Next
+            End If
 
             Return toReturn
         End Function
