@@ -2,7 +2,9 @@
 
 Namespace Saga
     Public Class Engine
+        ' Various flags to control the game's state.
         Private GameLoaded As Boolean = False
+        Private AskingForName As Boolean = True
         Private Running As Boolean = False
         Private NeedLook As Boolean = False
 
@@ -12,7 +14,7 @@ Namespace Saga
         Public Sub LoadGame(gameFilename As String)
             Dim majorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major.ToString()
             Dim minorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor.ToString()
-            Console.WriteLine($"Welcome to the Saga retro engine for Single-User Dungeons, version {majorVersion}.{minorVersion}!")
+            Console.WriteLine($"You are running the Saga retro engine for Single-User Dungeons, version {majorVersion}.{minorVersion}.")
             Console.WriteLine($"Loading saga ""{gameFilename}""...")
 
             ' Populate the Game object from the provided JSON file.
@@ -20,7 +22,6 @@ Namespace Saga
             If GameLoaded Then
                 CurrentRoom = Game.StartingRoom
                 Console.Title = $"Saga v{majorVersion}.{minorVersion} - {Game.Name}"
-                Console.WriteLine($"{Game.GetRoomCount()} rooms loaded. Ready to play ""{Game.Name}""!")
             End If
         End Sub
 
@@ -32,21 +33,47 @@ Namespace Saga
                 Return
             End If
 
-            Running = True
-            NeedLook = True
+            ' Prompt for the player's name.
+            Console.WriteLine()
+            Console.WriteLine($"Welcome to ""{Game.Name}""! What is your name?")
+            Console.Write("> ")
+            Dim input = Console.ReadLine()
+            HandleNameEntry(input)
 
             ' Main game loop.
+            NeedLook = True
             Do While Running
                 Console.WriteLine()
                 If NeedLook Then
+                    Console.ForegroundColor = ConsoleColor.Yellow
                     Console.WriteLine(Game.GetRoom(CurrentRoom).Name)
+                    Console.ResetColor()
                     Game.GetRoom(CurrentRoom).WriteDescription()
                     NeedLook = False
+                Else
+                    Console.ForegroundColor = ConsoleColor.Yellow
+                    Console.WriteLine(Game.GetRoom(CurrentRoom).Name)
+                    Console.ResetColor()
                 End If
                 Console.Write("> ")
-                Dim input = Console.ReadLine()
+                input = Console.ReadLine()
                 HandleInput(input)
             Loop
+        End Sub
+
+        Private Sub HandleNameEntry(input As String)
+            ' If we receive Ctrl+C, for example, exit.
+            If input Is Nothing Then
+                input = "exit"
+            End If
+
+            If input = "exit" Or input = "quit" Then
+                AskingForName = False
+            Else
+                Console.WriteLine($"Pleased to meet you, {input}!")
+                AskingForName = False
+                Running = True
+            End If
         End Sub
 
         ' Look up some of the most common commands' abbreviated shorthand.
@@ -105,7 +132,7 @@ Namespace Saga
             End If
         End Sub
 
-        Private Function DoHelp() As Boolean
+        Private Shared Function DoHelp() As Boolean
             Console.WriteLine("Type ""exit"" or ""quit"" to finish playing.")
             Console.WriteLine("     ""help"" or ""?"" to see these instructions.")
             Console.WriteLine("     ""look"" to look around at your surroundings.")
