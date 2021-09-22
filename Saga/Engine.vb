@@ -2,25 +2,24 @@
 
 Namespace Saga
     Public Class Engine
+        ' Various flags to control the game's state.
         Private GameLoaded As Boolean = False
         Private Running As Boolean = False
-        Private NeedLook As Boolean = False
+        Private DescriptionNeeded As Boolean = False
 
         Private Game As New Game
-        Private CurrentRoom As String
+        Private Player As New Player
 
         Public Sub LoadGame(gameFilename As String)
             Dim majorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major.ToString()
             Dim minorVersion As String = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor.ToString()
-            Console.WriteLine($"Welcome to the Saga retro engine for Single-User Dungeons, version {majorVersion}.{minorVersion}!")
+            Console.WriteLine($"You are running the Saga retro engine for Single-User Dungeons, version {majorVersion}.{minorVersion}.")
             Console.WriteLine($"Loading saga ""{gameFilename}""...")
 
             ' Populate the Game object from the provided JSON file.
             GameLoaded = Game.LoadFromJson(gameFilename)
             If GameLoaded Then
-                CurrentRoom = Game.StartingRoom
                 Console.Title = $"Saga v{majorVersion}.{minorVersion} - {Game.Name}"
-                Console.WriteLine($"{Game.GetRoomCount()} rooms loaded. Ready to play ""{Game.Name}""!")
             End If
         End Sub
 
@@ -32,21 +31,76 @@ Namespace Saga
                 Return
             End If
 
-            Running = True
-            NeedLook = True
+            ' Prompt for the player's name.
+            Console.WriteLine()
+            Console.WriteLine($"Welcome to ""{Game.Name}""! What is your name?")
+            Console.Write("> ")
+            Dim input = Console.ReadLine()
+            HandleNameEntry(input)
 
             ' Main game loop.
+            DescriptionNeeded = True
             Do While Running
                 Console.WriteLine()
-                If NeedLook Then
-                    Console.WriteLine(Game.GetRoom(CurrentRoom).Name)
-                    Game.GetRoom(CurrentRoom).WriteDescription()
-                    NeedLook = False
+
+                ' Try to ensure our current room exists.
+                CheckCurrentRoom()
+
+                ' Print the current room name always, but the description only if needed.
+                If DescriptionNeeded Then
+                    Console.ForegroundColor = ConsoleColor.Yellow
+                    Console.WriteLine(Game.GetRoom(Player.CurrentRoom).Name)
+                    Console.ResetColor()
+                    Game.GetRoom(Player.CurrentRoom).WriteDescription()
+                    DescriptionNeeded = False
+                Else
+                    Console.ForegroundColor = ConsoleColor.Yellow
+                    Console.WriteLine(Game.GetRoom(Player.CurrentRoom).Name)
+                    Console.ResetColor()
                 End If
+
+                ' Prompt for the player's input.
                 Console.Write("> ")
-                Dim input = Console.ReadLine()
+                input = Console.ReadLine()
                 HandleInput(input)
             Loop
+
+            Player.Save()
+        End Sub
+
+        Private Sub HandleNameEntry(input As String)
+            ' If we receive Ctrl+C, for example, exit.
+            If input Is Nothing Or input = "exit" Or input = "quit" Then
+                Return
+            End If
+
+            Dim name As String = input.Trim()
+            If System.IO.File.Exists(name + ".json") Then
+                ' If a file exists by this name, try loading it.
+                If Player.Load(name) Then
+                    Console.WriteLine($"Welcome back, {Player.Name}!")
+                    Running = True
+                End If
+            Else
+                ' Otherwise, start a new game.
+                Player.Name = name
+                Player.CurrentRoom = Game.StartingRoom
+                Player.Save()
+                Console.WriteLine($"Pleased to meet you, {Player.Name}!")
+                Running = True
+            End If
+        End Sub
+
+        Private Sub CheckCurrentRoom()
+            If Game.GetRoom(Player.CurrentRoom) Is Nothing Then
+                ' Uh oh. How did we get here?
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.WriteLine($"Room ""{Player.CurrentRoom}"" wasn't found. How did you get here?")
+                Console.ResetColor()
+                ' TODO: Make sure a Limbo room exists too.
+                Player.CurrentRoom = "Limbo"
+                DescriptionNeeded = True
+            End If
         End Sub
 
         ' Look up some of the most common commands' abbreviated shorthand.
@@ -90,7 +144,7 @@ Namespace Saga
                 Case "help", "?"
                     inputUnderstood = DoHelp()
                 Case "look"
-                    NeedLook = True
+                    DescriptionNeeded = True
                     inputUnderstood = True
                 Case ""
                     inputUnderstood = True
@@ -105,7 +159,7 @@ Namespace Saga
             End If
         End Sub
 
-        Private Function DoHelp() As Boolean
+        Private Shared Function DoHelp() As Boolean
             Console.WriteLine("Type ""exit"" or ""quit"" to finish playing.")
             Console.WriteLine("     ""help"" or ""?"" to see these instructions.")
             Console.WriteLine("     ""look"" to look around at your surroundings.")
@@ -114,11 +168,11 @@ Namespace Saga
         End Function
 
         Private Function TryExit(input As String) As Boolean
-            If Game.GetRoom(CurrentRoom).HasExit(input) Then
-                Dim newRoom As String = Game.GetRoom(CurrentRoom).GetExit(input).Room
+            If Game.GetRoom(Player.CurrentRoom).HasExit(input) Then
+                Dim newRoom As String = Game.GetRoom(Player.CurrentRoom).GetExit(input).Room
                 If Game.GetRoom(newRoom) IsNot Nothing Then
-                    CurrentRoom = newRoom
-                    NeedLook = True
+                    Player.CurrentRoom = newRoom
+                    DescriptionNeeded = True
                 Else
                     Console.ForegroundColor = ConsoleColor.Red
                     Console.WriteLine($"Room ""{newRoom}"" wasn't found!")
