@@ -4,6 +4,7 @@ Namespace Saga
     Public Class Engine
         ' Various flags to control the game's state.
         Private GameLoaded As Boolean = False
+        Private AskingForName As Boolean = True
         Private Running As Boolean = False
         Private DescriptionNeeded As Boolean = False
 
@@ -31,12 +32,14 @@ Namespace Saga
                 Return
             End If
 
-            ' Prompt for the player's name.
             Console.WriteLine()
             Console.WriteLine($"Welcome to ""{Game.Name}""! What is your name?")
-            Console.Write("> ")
-            Dim input = Console.ReadLine()
-            HandleNameEntry(input)
+            Do While AskingForName
+                ' Prompt for the player's name.
+                Console.Write("> ")
+                Dim input = Console.ReadLine()
+                HandleNameEntry(input.Trim())
+            Loop
 
             ' Main game loop.
             DescriptionNeeded = True
@@ -61,8 +64,8 @@ Namespace Saga
 
                 ' Prompt for the player's input.
                 Console.Write("> ")
-                input = Console.ReadLine()
-                HandleInput(input)
+                Dim input = Console.ReadLine()
+                HandleInput(input.Trim())
             Loop
 
             Player.Save()
@@ -71,22 +74,28 @@ Namespace Saga
         Private Sub HandleNameEntry(input As String)
             ' If we receive Ctrl+C, for example, exit.
             If input Is Nothing Or input = "exit" Or input = "quit" Then
+                AskingForName = False
                 Return
             End If
 
-            Dim name As String = input.Trim()
-            If System.IO.File.Exists(name + ".json") Then
+            If input = "" Then
+                Return
+            End If
+
+            If System.IO.File.Exists(input + ".json") Then
                 ' If a file exists by this name, try loading it.
-                If Player.Load(name) Then
+                If Player.Load(input) Then
                     Console.WriteLine($"Welcome back, {Player.Name}!")
+                    AskingForName = False
                     Running = True
                 End If
             Else
                 ' Otherwise, start a new game.
-                Player.Name = name
+                Player.Name = input
                 Player.CurrentRoom = Game.StartingRoom
                 Player.Save()
                 Console.WriteLine($"Pleased to meet you, {Player.Name}!")
+                AskingForName = False
                 Running = True
             End If
         End Sub
@@ -132,7 +141,7 @@ Namespace Saga
                 input = "exit"
             End If
 
-            input = input.Trim().ToLower()
+            input = input.ToLower()
 
             input = LookupShorthand(input)
 
